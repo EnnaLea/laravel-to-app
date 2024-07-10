@@ -61,9 +61,14 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Task $task)
+    public function edit(Request $request, $id)
     {
-        //
+        $task = Task::find($id)->update([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+        response()->json($task);
+        return redirect ('/welcome');
     }
 
     /**
@@ -77,8 +82,11 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(Request $request)
     {
-        //
+        $checkedIds = $request->ids;
+        Task::whereIn('id', $checkedIds)->delete();
+
+        return redirect ('/welcome');
     }
 }
